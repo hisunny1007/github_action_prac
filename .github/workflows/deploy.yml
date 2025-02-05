@@ -38,7 +38,7 @@ jobs:
         run: docker compose build
 
       - name: Login DockerHub
-        run: eco '${{ secrets.DOCKER_PASSWORD }}' | docker login -u '${{ secrets.DOCKER_USERNAME }}' --password-stdin
+        run: echo '${{ secrets.DOCKER_PASSWORD }}' | docker login -u '${{ secrets.DOCKER_USERNAME }}' --password-stdin
 
       - name: Docker Image Push
         run: docker compose push
