@@ -61,7 +61,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            docker rm -f $(docker ps -aq)
             cd ~/work-directory
             docker-compose pull
+            docker-compose down
             docker-compose up -d
 
