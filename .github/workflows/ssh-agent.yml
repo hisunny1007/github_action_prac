@@ -1,0 +1,16 @@
+name: ssh
+
+on:
+  push:  # 워크플로우 실행 조건 이벤트
+    branches: # 워크플로우 실행 조건 브랜치
+      - main
+
+jobs:
+  ssh-agent: # Job 이름
+    runs-on: ubuntu-24.04 # GitHub 워크스페이스 연결
+
+    steps: # 실행할 작업(step)
+      - name: run ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
