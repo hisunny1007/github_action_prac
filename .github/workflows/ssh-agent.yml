@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-24.04 # GitHub 워크스페이스 연결
 
     steps: # 실행할 작업(step)
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: run ssh-agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -22,7 +25,8 @@ jobs:
 
       - name: create file on remote server
         run: ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "touch 'hello-world.txt'"
-
-
+      
+      - name: copy file to remote server
+        run: scp -P ${{ secrets.SSH_PORT }} README.md ${{ secrets.SSH_USERNAME}}@${{ secrets.SSH_HOST }}:~/
         
 
