@@ -28,5 +28,18 @@ jobs:
       
       - name: copy file to remote server
         run: scp -P ${{ secrets.SSH_PORT }} README.md ${{ secrets.SSH_USERNAME}}@${{ secrets.SSH_HOST }}:~/
+
+      - name: Run remote command test
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          #  SSH 연결로 순차적으로 실행할 명령어 목록
+          script: |
+            touch 'hello-world1.txt'
+            touch 'hello-world2.txt'
+            touch 'hello-world3.txt'
         
 
