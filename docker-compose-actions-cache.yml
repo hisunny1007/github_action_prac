@@ -9,7 +9,7 @@ services:
     networks:
       - db-connect
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 10s
       timeout: 5s
       retries: 3
@@ -27,9 +27,9 @@ services:
         # mode: 캐시의 저장 방식(max: 최대한 많은 캐시 데이터를 저장)
       # 캐시를 불러올 경로
       cache_from:
-        - type=local,src=tmp/.buildx-cache/backend
+        - type=local,src=/tmp/.buildx-cache/backend
         # src: 캐시 불러올 경로
-      
+
     image: hisuuny/backend:latest
     env_file:
       - .env
@@ -50,7 +50,7 @@ services:
         VITE_API_URL: ${VITE_API_URL}
     image: hisuuny/frontend:latest
     ports:
-      - "80:80"
+      - '80:80'
     networks:
       - backend-connect
     depends_on:
