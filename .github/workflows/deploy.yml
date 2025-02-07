@@ -1,7 +1,7 @@
 name: deploy service
 
 on:
-  push:  # 워크플로우 실행 조건 이벤트
+  push: # 워크플로우 실행 조건 이벤트
     branches: # 워크플로우 실행 조건 브랜치
       - main
 
@@ -19,7 +19,7 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          title: "배포 시작"
+          title: '배포 시작'
 
       # 캐시 저장 설정을 위한 action(라이브러리)
       - name: Cache Docker Image Layer
@@ -27,8 +27,9 @@ jobs:
         uses: actions/cache@v4.2.0
         with:
           path: /tmp/.buildx-cache
-          key: docker-image-layer-cache
-            
+          key: docker-image-layer-cache-${{ github.sha }}
+          restore-keys: docker-image-layer-cache
+
       - name: run ssh-agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -38,7 +39,7 @@ jobs:
       # known_hosts : 원격 서버들의 지문이 저장된 파일
       - name: Add Remote Server Fingerprint to Known Hosts
         run: ssh-keyscan -H -p ${{ secrets.SSH_PORT}} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts || true
-      
+
       - name: Create .env file
         run: |
           echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
@@ -49,7 +50,6 @@ jobs:
           echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" >> .env
-
 
       # 도커 BuildKit 엔진 설정 action(라이브러리)
       - name: Set up Docker Buildkit
@@ -83,13 +83,13 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          source: "docker-compose-actions-cache.yml,.env"
-          target: "~/work-directory"
+          source: 'docker-compose-actions-cache.yml,.env'
+          target: '~/work-directory'
 
       - name: Pull Image & Up Container
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SSH_HOST }}   
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
@@ -100,7 +100,6 @@ jobs:
             docker-compose -f docker-compose-actions-cache.yml down
             docker-compose -f docker-compose-actions-cache.yml up -d
 
-
       # 액션 종료 알림 메세지
       - name: End Discord Notification message - Success
         # 라이브러리 개발자/라이브러리 이름@버전
@@ -108,8 +107,7 @@ jobs:
         if: success()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          title: "배포 종료 - 성공"
-
+          title: '배포 종료 - 성공'
 
       # 액션 종료 알림 메세지
       - name: End Discord Notification message - Fail
@@ -118,4 +116,4 @@ jobs:
         if: failure()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          title: "배포 종료 - 실패"          
+          title: '배포 종료 - 실패'
