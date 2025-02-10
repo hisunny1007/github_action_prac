@@ -31,6 +31,9 @@ pipeline {
               // Docker 이미지 빌드
               sh 'docker compose build'
 
+              // 기존 Docker 컨테이너 중지
+              sh 'docker compose down'
+
               // Docker 컨테이너 실행
               sh 'docker compose up -d'
             }
