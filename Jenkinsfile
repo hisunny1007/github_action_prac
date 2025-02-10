@@ -20,8 +20,19 @@ pipeline {
                 // 번외) 권한 : 읽기4 쓰기2 실행1
 
                 sh 'chmod 644 .env'
-                
               }
+            }
+          }
+        }
+
+        stage("Docker Image Build & Container Run") {
+          steps {
+            script {
+              // Docker 이미지 빌드
+              sh 'docker compose build'
+
+              // Docker 컨테이너 실행
+              sh 'docker compose up -d'
             }
           }
         }
