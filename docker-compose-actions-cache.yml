@@ -60,9 +60,14 @@ services:
         VITE_API_URL: ${VITE_API_URL}
     image: hisuuny/frontend:latest
     ports:
-      - '80:80'
+      - "80:80"
+      - "443:443"
     networks:
       - backend-connect
+    volumes:
+     # 인증서 역할을 연결함
+      - /etc/letsencrypt/live/3.38.165.170.sslip.io/fullchain.pem:/etc/letsencrypt/live/3.38.165.170.sslip.io/fullchain.pem
+      - /etc/letsencrypt/live/3.38.165.170.sslip.io/privkey.pem:/etc/letsencrypt/live/3.38.165.170.sslip.io/privkey.pem
     depends_on:
       - backend
       - db
