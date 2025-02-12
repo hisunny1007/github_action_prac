@@ -13,6 +13,10 @@ public class ArticleResponseDto {
 	private Long id;
 	private String title;
 	private String content;
+
+	private String imageUrl;
+	private String originalFileName;
+
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 }
