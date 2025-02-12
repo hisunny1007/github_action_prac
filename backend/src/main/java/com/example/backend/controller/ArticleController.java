@@ -37,9 +37,14 @@ public class ArticleController {
 		return articleService.createArticle(requestDto);
 	}
 
-  @GetMapping("/{id}")
+	@GetMapping("/{id}")
 	public ArticleResponseDto getArticleById(@PathVariable Long id) {
-		return articleService.getArticleById(id);
+	  return articleService.getArticleById(id);
+	}
+
+	@DeleteMapping("/{id}")
+	public void deleteArticleById(@PathVariable Long id) {
+		articleService.deleteArticle(id);
 	}
 
 }

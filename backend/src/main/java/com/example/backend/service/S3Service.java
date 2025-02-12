@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectAclRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -52,10 +53,10 @@ public class S3Service {
         );
     }
 
-    // 실질적오르 S3 버킷에 파일(객체)을 업로드하는 메서드
+    // 실질적으로 S3 버킷에 파일(객체)을 업로드하는 메서드
     private void uploadFileTos3(String s3Key, MultipartFile file) {
          try {
-        // s3에 요청할 객체
+            // s3에 요청할 객체
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(s3Key)
@@ -63,10 +64,26 @@ public class S3Service {
                     .contentLength(file.getSize())
                     .build();
 
+            // s3에 파일 업로드 요청
             s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
         } catch (IOException e) {
              throw new RuntimeException("파일 업로드 실패" + e.getMessage());
          }
     }
+
+    // s3 파일 삭제 처리 로직
+    public void deleteFile(String s3Key) {
+        try {
+            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(s3Key)
+                    .build();
+
+            s3Client.deleteObject(deleteObjectRequest);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }

@@ -66,7 +66,7 @@ public class ArticleService {
 				.collect(Collectors.toList());
 	}
 
-  @Transactional
+	@Transactional
 	public ArticleResponseDto getArticleById(Long id)  {
 		Article article = articleRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Article not found with id: " + id));
@@ -75,6 +75,15 @@ public class ArticleService {
 		return toResponseDto(article);
 	}
 
+	@Transactional
+	public void deleteArticle(Long id) {
+		Article article = articleRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("못찾음"));
+
+		s3Service.deleteFile(article.getS3Key());
+
+		articleRepository.delete(article);
+	}
 
 	private ArticleResponseDto toResponseDto(Article article) {
 
